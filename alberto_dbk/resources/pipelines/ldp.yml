@@ -1,0 +1,12 @@
+resources:
+  pipelines:
+    pipeline_ldp:
+      name: ldp
+      libraries:
+        - glob:
+            include: ../../src/simple_ldp/transformations/**
+      schema: default
+      photon: true
+      catalog: training_catalog
+      serverless: true
+      root_path: ../../src/simple_ldp/

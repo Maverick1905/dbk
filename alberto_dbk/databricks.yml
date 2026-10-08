@@ -1,0 +1,45 @@
+
+bundle:
+  name: alberto_dbk
+  uuid: dff4f9f2-48b1-4521-b3f3-30536568729d
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+#artifacts:
+ # python_artifact:
+  #  type: whl
+   # build: uv build --wheel
+
+variables:
+  catalog:
+    description: The catalog to use
+  schema:
+    description: The schema to use
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-7405619579937825.5.azuredatabricks.net #hostname from SQL warehouse
+    variables:
+      catalog: training_catalog
+      schema: gold
+    presets: 
+      name_prefix: dev_${workspace.current_user.short_name}
+      source_linked_deployment: false
+    
+  prod:
+    mode: production
+    workspace:
+      host: http://127.0.0.1:7073
+      # We explicitly deploy to /Workspace/Users/a.mura9@studenti.unipi.it to make sure we only have a single copy.
+      root_path: /Workspace/Users/a.mura9@studenti.unipi.it/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: default
+      schema: prod
+    permissions:
+      - user_name: a.mura9@studenti.unipi.it
+        level: CAN_MANAGE
